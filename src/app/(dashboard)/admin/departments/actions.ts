@@ -3,31 +3,36 @@
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 
-export async function createDepartment(formData: FormData) {
+export async function createDepartment(formData: FormData): Promise<void> {
   const supabase = await createClient();
   const name = formData.get("name") as string;
 
   if (!name) {
-    return { error: "Name is required." };
+    console.error("createDepartment: Name is required.");
+    return;
   }
 
   const { error } = await supabase.from("departments").insert({ name });
 
-  if (error) return { error: error.message };
+  if (error) {
+    console.error("createDepartment:", error.message);
+    return;
+  }
 
   revalidatePath("/admin/departments");
-  revalidatePath("/devices/add"); // Crucial for the dropdown
-  return { success: true };
+  revalidatePath("/devices/add");
 }
 
-export async function deleteDepartment(id: string) {
+export async function deleteDepartment(id: string): Promise<void> {
   const supabase = await createClient();
 
   const { error } = await supabase.from("departments").delete().eq("id", id);
 
-  if (error) return { error: error.message };
+  if (error) {
+    console.error("deleteDepartment:", error.message);
+    return;
+  }
 
   revalidatePath("/admin/departments");
   revalidatePath("/devices/add");
-  return { success: true };
 }

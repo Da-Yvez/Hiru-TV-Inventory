@@ -83,6 +83,17 @@ const NAV_ITEMS = [
         adminOnly: true,
       },
       {
+        href: "/admin/device-types",
+        label: "Device types",
+        icon: (
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+          </svg>
+        ),
+        adminOnly: true,
+      },
+      {
         href: "/admin/users",
         label: "User Accounts",
         icon: (
@@ -105,12 +116,13 @@ export default function Sidebar({ userEmail, userRole }: SidebarProps) {
     <aside className={`${styles.sidebar} ${collapsed ? styles.collapsed : ""}`}>
       {/* Brand Header with Hiru TV Logo */}
       <div className={styles.brand}>
-        <Image 
-          src="/logo.jpg" 
-          alt="Hiru TV Logo" 
-          width={44} 
-          height={44} 
+        <Image
+          src="/logo.jpg"
+          alt="Hiru TV Logo"
+          width={44}
+          height={44}
           className={styles.brandLogo}
+          suppressHydrationWarning
         />
         {!collapsed && (
           <div className={styles.brandText}>

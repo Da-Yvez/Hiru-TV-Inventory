@@ -1,3 +1,30 @@
+.tableActions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.iconLinkBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  border-radius: var(--radius-md);
+  background: white;
+  color: var(--text-secondary);
+  border: 1px solid var(--clr-border);
+  transition: all var(--transition-fast);
+}
+.iconLinkBtn:hover {
+  background: var(--clr-bg-hover);
+  border-color: var(--clr-gold);
+  color: var(--clr-gold);
+}
+
 .toolbarCard {
   background: white;
   border: 1px solid var(--clr-border);

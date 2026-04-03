@@ -156,11 +156,11 @@ input, textarea, select { font-family: var(--font-sans); outline: none; }
 .btn-primary {
   background: linear-gradient(135deg, var(--clr-accent), #f9b42d);
   color: white;
-  box-shadow: var(--shadow-accent);
+  box-shadow: 0 2px 10px rgba(255, 159, 0, 0.22);
 }
 .btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 24px rgba(255, 159, 0, 0.3);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(255, 159, 0, 0.28);
 }
 
 .btn-ghost {

@@ -23,8 +23,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={inter.variable}>
-      <body>{children}</body>
+    <html lang="en" className={inter.variable} suppressHydrationWarning>
+      {/* suppressHydrationWarning: browser extensions (e.g. Dark Reader) mutate <html>/descendants before hydration */}
+      <body suppressHydrationWarning>{children}</body>
     </html>
   );
 }

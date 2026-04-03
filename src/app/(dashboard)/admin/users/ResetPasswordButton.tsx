@@ -1,6 +1,7 @@
 "use client";
 
 import { adminResetPassword } from "./actions";
+import styles from "./ResetPasswordButton.module.css";
 
 export default function ResetPasswordButton({ userId }: { userId: string }) {
   const handleReset = async () => {
@@ -21,19 +22,9 @@ export default function ResetPasswordButton({ userId }: { userId: string }) {
   };
 
   return (
-    <button 
-      className="btn btn-ghost btn-sm" 
-      style={{ 
-        display: 'flex', 
-        alignItems: 'center', 
-        gap: '0.5rem', 
-        fontSize: '0.75rem', 
-        fontWeight: '700',
-        color: 'var(--clr-gold)',
-        border: '1px solid rgba(212, 175, 55, 0.2)',
-        borderRadius: 'var(--radius-md)',
-        padding: '0.35rem 0.75rem'
-      }}
+    <button
+      type="button"
+      className={`btn btn-ghost btn-sm ${styles.resetBtn}`}
       onClick={handleReset}
       title="Set temporary password"
     >

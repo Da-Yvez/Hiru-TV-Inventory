@@ -66,15 +66,15 @@ export default async function AdminDepartmentsPage() {
 
         {/* Add Department Form */}
         <div className={styles.formPanel}>
-          <div className="glass-card p-6">
+          <div className={`glass-card p-6 ${styles.quickAddCard}`}>
             <h2 className="text-lg font-bold mb-4">Quick Add</h2>
-            <form action={createDepartment} className="flex flex-col gap-4">
+            <form action={createDepartment} className={styles.quickAddForm}>
               <div className="form-group">
                 <label className="form-label">Name *</label>
                 <input name="name" className="form-input" required placeholder="e.g. Sales, Newsroom..." />
               </div>
 
-              <button type="submit" className="btn btn-primary w-full mt-2">
+              <button type="submit" className={`btn btn-primary ${styles.quickAddSubmit}`}>
                 Add to List
               </button>
             </form>

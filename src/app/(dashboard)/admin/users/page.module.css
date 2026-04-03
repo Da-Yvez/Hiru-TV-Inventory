@@ -1,3 +1,33 @@
+.fullWidthLayout {
+  width: 100%;
+}
+
+.actionsHeader,
+.actionsCell {
+  text-align: center;
+  vertical-align: middle;
+  width: 1%;
+  min-width: 15rem;
+}
+
+.actionsRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  justify-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  max-width: 17rem;
+  margin-inline: auto;
+}
+
+.inlineForm {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+}
+
 .layout {
   display: grid;
   grid-template-columns: 1fr 340px;

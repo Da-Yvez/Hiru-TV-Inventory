@@ -31,7 +31,7 @@ export default async function AdminUsersPage() {
                 <th>Full Name</th>
                 <th>Email</th>
                 <th>Role</th>
-                <th style={{ textAlign: "center" }}>Action Controls</th>
+                <th className={styles.actionsHeader}>Action Controls</th>
               </tr>
             </thead>
             <tbody>
@@ -58,11 +58,11 @@ export default async function AdminUsersPage() {
                       {user.role === 'TECHNICIAN' ? 'USER' : user.role}
                     </span>
                   </td>
-                  <td style={{ textAlign: "center" }}>
-                      <div className="flex justify-center items-center gap-4">
+                  <td className={styles.actionsCell}>
+                      <div className={styles.actionsRow}>
                         <ResetPasswordButton userId={user.id} />
 
-                        <form action={deleteUser.bind(null, user.id)} className="flex items-center">
+                        <form action={deleteUser.bind(null, user.id)} className={styles.inlineForm}>
                             <button type="submit" className={styles.deleteBtn} title="Remove Staff Account">
                                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                                     <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />

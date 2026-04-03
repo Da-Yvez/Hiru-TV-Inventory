@@ -93,13 +93,16 @@ export async function adminResetPassword(userId: string, newPassword: string) {
   return { success: true };
 }
 
-export async function deleteUser(userId: string) {
+export async function deleteUser(userId: string): Promise<void> {
   const supabase = await createClient();
   const adminClient = await createAdminClient();
 
   // 1. Admin check
   const { data: { user: currentUser } } = await supabase.auth.getUser();
-  if (currentUser?.id === userId) return { error: "You cannot delete yourself." };
+  if (currentUser?.id === userId) {
+    console.error("deleteUser: You cannot delete yourself.");
+    return;
+  }
 
   const { data: profile } = await supabase
     .from("user_profiles")
@@ -107,13 +110,18 @@ export async function deleteUser(userId: string) {
     .eq("id", currentUser?.id)
     .single();
 
-  if (profile?.role !== "ADMIN") return { error: "Unauthorized." };
+  if (profile?.role !== "ADMIN") {
+    console.error("deleteUser: Unauthorized.");
+    return;
+  }
 
   // 2. Delete from Auth (cascades to public.user_profiles if FK is set)
   const { error } = await adminClient.auth.admin.deleteUser(userId);
 
-  if (error) return { error: error.message };
+  if (error) {
+    console.error("deleteUser:", error.message);
+    return;
+  }
 
   revalidatePath("/admin/users");
-  return { success: true };
 }

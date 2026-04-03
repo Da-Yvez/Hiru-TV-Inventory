@@ -4,6 +4,23 @@ import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
+function parseSpecJson(formData: FormData): Record<string, string> | null {
+  const raw = formData.get("spec_json") as string;
+  if (!raw?.trim()) return {};
+  try {
+    const parsed = JSON.parse(raw) as unknown;
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return null;
+    const out: Record<string, string> = {};
+    for (const [k, v] of Object.entries(parsed as Record<string, unknown>)) {
+      if (v === null || v === undefined) out[k] = "";
+      else out[k] = String(v);
+    }
+    return out;
+  } catch {
+    return null;
+  }
+}
+
 export async function createDevice(formData: FormData) {
   const supabase = await createClient();
   
@@ -14,11 +31,33 @@ export async function createDevice(formData: FormData) {
   const model = formData.get("model") as string;
   const serial_number = formData.get("serial") as string;
   const assigned_user = formData.get("user") as string;
-  const cpu = formData.get("cpu") as string;
-  const gpu = formData.get("gpu") as string;
-  const ram = formData.get("ram") as string;
-  const storage = formData.get("storage") as string;
-  const status = formData.get("status") as string || "ACTIVE";
+  const department_id = ((formData.get("department_id") as string) || "").trim() || null;
+  const device_type_id = ((formData.get("device_type_id") as string) || "").trim();
+  const status = (formData.get("status") as string) || "ACTIVE";
+
+  const spec_values = parseSpecJson(formData);
+  if (spec_values === null) {
+    return { error: "Invalid specifications data." };
+  }
+  if (!device_type_id) {
+    return { error: "Device type is required." };
+  }
+
+  const { data: dtype, error: typeErr } = await supabase
+    .from("inventory_device_types")
+    .select("is_pc")
+    .eq("id", device_type_id)
+    .single();
+
+  if (typeErr || !dtype) {
+    return { error: "Invalid or unknown device type. Run database migration if this is a new install." };
+  }
+
+  const isPc = Boolean(dtype.is_pc);
+  const cpu = isPc ? (spec_values.cpu ?? "") : "—";
+  const gpu = isPc ? (spec_values.gpu?.trim() ? spec_values.gpu : null) : null;
+  const ram = isPc ? (spec_values.ram ?? "") : "—";
+  const storage = isPc ? (spec_values.storage ?? "") : "—";
 
   // 2. Insert Device
   const { data: device, error: deviceError } = await supabase
@@ -28,8 +67,11 @@ export async function createDevice(formData: FormData) {
       model,
       serial_number: serial_number || null,
       assigned_user: assigned_user || null,
+      department_id,
+      device_type_id,
+      spec_values,
       cpu,
-      gpu: gpu || null,
+      gpu,
       ram,
       storage,
       status,
@@ -45,9 +87,9 @@ export async function createDevice(formData: FormData) {
 
   const deviceId = device.id;
 
-  // 3. Handle Network Interfaces
+  // 3. Handle Network Interfaces (PC only)
   const nicsJson = formData.get("nics_json") as string;
-  if (nicsJson) {
+  if (nicsJson && isPc) {
     const nics = JSON.parse(nicsJson);
     if (nics.length > 0) {
       const { error: nicError } = await supabase.from("network_interfaces").insert(
@@ -62,9 +104,9 @@ export async function createDevice(formData: FormData) {
     }
   }
 
-  // 4. Handle Monitors
+  // 4. Handle Monitors (PC only)
   const monitorsJson = formData.get("monitors_json") as string;
-  if (monitorsJson) {
+  if (monitorsJson && isPc) {
     const monitors = JSON.parse(monitorsJson);
     if (monitors.length > 0) {
       const { error: monError } = await supabase.from("monitors").insert(
@@ -78,9 +120,9 @@ export async function createDevice(formData: FormData) {
     }
   }
 
-  // 5. Handle Software Licenses
+  // 5. Handle Software Licenses (PC only)
   const softwareJson = formData.get("software_json") as string;
-  if (softwareJson) {
+  if (softwareJson && isPc) {
     const software = JSON.parse(softwareJson);
     if (software.length > 0) {
       const { error: softError } = await supabase.from("software_licenses").insert(
@@ -119,12 +161,49 @@ export async function updateDevice(id: string, formData: FormData) {
   const model = formData.get("model") as string;
   const serial_number = formData.get("serial") as string;
   const assigned_user = formData.get("user") as string;
-  const cpu = formData.get("cpu") as string;
-  const gpu = formData.get("gpu") as string;
-  const ram = formData.get("ram") as string;
-  const storage = formData.get("storage") as string;
   const status = formData.get("status") as string;
   const department_id = formData.get("department_id") as string;
+  const device_type_id = ((formData.get("device_type_id") as string) || "").trim();
+
+  const spec_values = parseSpecJson(formData);
+  if (spec_values === null) {
+    return { error: "Invalid specifications data." };
+  }
+
+  let resolvedTypeId = device_type_id;
+  if (!resolvedTypeId) {
+    const { data: existing } = await supabase.from("devices").select("device_type_id").eq("id", id).single();
+    resolvedTypeId = (existing?.device_type_id as string) || "";
+  }
+
+  if (!resolvedTypeId) {
+    const { data: pcRow } = await supabase
+      .from("inventory_device_types")
+      .select("id")
+      .eq("slug", "pc")
+      .maybeSingle();
+    if (pcRow?.id) resolvedTypeId = pcRow.id as string;
+  }
+
+  if (!resolvedTypeId) {
+    return { error: "Device type is missing. Run the device types migration, then open this device from the list again." };
+  }
+
+  const { data: dtype, error: typeErr } = await supabase
+    .from("inventory_device_types")
+    .select("is_pc")
+    .eq("id", resolvedTypeId)
+    .single();
+
+  if (typeErr || !dtype) {
+    return { error: "Invalid device type." };
+  }
+
+  const isPc = Boolean(dtype.is_pc);
+  const cpu = isPc ? (spec_values.cpu ?? "") : "—";
+  const gpu = isPc ? (spec_values.gpu?.trim() ? spec_values.gpu : null) : null;
+  const ram = isPc ? (spec_values.ram ?? "") : "—";
+  const storage = isPc ? (spec_values.storage ?? "") : "—";
 
   // 2. Update Device
   const { error: deviceError } = await supabase
@@ -135,12 +214,14 @@ export async function updateDevice(id: string, formData: FormData) {
       serial_number: serial_number || null,
       assigned_user: assigned_user || null,
       cpu,
-      gpu: gpu || null,
+      gpu,
       ram,
       storage,
       status,
       department_id: department_id || null,
-      updated_at: new Error().stack ? new Date().toISOString() : undefined // trigger update
+      device_type_id: resolvedTypeId,
+      spec_values,
+      updated_at: new Date().toISOString(),
     })
     .eq("id", id);
 
@@ -149,7 +230,7 @@ export async function updateDevice(id: string, formData: FormData) {
   // 3. Update Relations (Sync strategy: Delete then re-insert)
   await supabase.from("network_interfaces").delete().eq("device_id", id);
   const nicsJson = formData.get("nics_json") as string;
-  if (nicsJson) {
+  if (nicsJson && isPc) {
     const nics = JSON.parse(nicsJson);
     if (nics.length > 0) {
       await supabase.from("network_interfaces").insert(
@@ -165,7 +246,7 @@ export async function updateDevice(id: string, formData: FormData) {
 
   await supabase.from("monitors").delete().eq("device_id", id);
   const monitorsJson = formData.get("monitors_json") as string;
-  if (monitorsJson) {
+  if (monitorsJson && isPc) {
     const monitors = JSON.parse(monitorsJson);
     if (monitors.length > 0) {
       await supabase.from("monitors").insert(
@@ -180,7 +261,7 @@ export async function updateDevice(id: string, formData: FormData) {
 
   await supabase.from("software_licenses").delete().eq("device_id", id);
   const softwareJson = formData.get("software_json") as string;
-  if (softwareJson) {
+  if (softwareJson && isPc) {
     const software = JSON.parse(softwareJson);
     if (software.length > 0) {
       await supabase.from("software_licenses").insert(

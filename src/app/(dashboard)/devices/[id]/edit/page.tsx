@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import type { DeviceTypeRow } from "@/lib/device-types";
 import { notFound, redirect } from "next/navigation";
 import EditDeviceForm from "./EditDeviceForm";
 
@@ -38,10 +39,18 @@ export default async function EditDevicePage({ params }: { params: Promise<{ id:
     .select("*")
     .order("name");
 
+  const { data: deviceTypes } = await supabase
+    .from("inventory_device_types")
+    .select(
+      "id, slug, name, description, is_pc, sort_order, inventory_device_type_fields(id, field_key, label, field_kind, required, sort_order, select_options)"
+    )
+    .order("sort_order");
+
   return (
-    <EditDeviceForm 
-      device={device} 
-      departments={departments || []} 
+    <EditDeviceForm
+      device={device}
+      departments={departments || []}
+      deviceTypes={(deviceTypes as DeviceTypeRow[]) ?? []}
     />
   );
 }

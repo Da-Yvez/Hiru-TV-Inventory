@@ -3,11 +3,13 @@
   inset: 0;
   background: rgba(10, 10, 10, 0.45);
   backdrop-filter: blur(12px);
-  z-index: 10000;
+  z-index: 200000;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 1.5rem;
+  padding-top: max(1.5rem, env(safe-area-inset-top, 0px));
+  overflow-y: auto;
   animation: fadeIn 0.3s ease-out;
 }
 

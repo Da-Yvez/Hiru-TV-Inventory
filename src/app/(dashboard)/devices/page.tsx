@@ -134,15 +134,15 @@ export default async function DevicesPage() {
                   </td>
                   
                   <td style={{ textAlign: "right" }}>
-                    <div className="flex justify-end gap-1">
-                        <Link href={`/devices/${device.id}`} className="btn btn-ghost btn-sm" style={{ padding: '0.4rem' }} title="View Details">
+                    <div className={styles.tableActions}>
+                        <Link href={`/devices/${device.id}`} className={styles.iconLinkBtn} title="View details">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
                                 <circle cx="12" cy="12" r="3" />
                             </svg>
                         </Link>
                         {isAdmin && (
-                          <Link href={`/devices/${device.id}/edit`} className="btn btn-ghost btn-sm" style={{ padding: '0.4rem' }} title="Edit Device">
+                          <Link href={`/devices/${device.id}/edit`} className={styles.iconLinkBtn} title="Edit device">
                               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                                   <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
                                   <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
