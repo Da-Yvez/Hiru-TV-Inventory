@@ -1,49 +1,252 @@
+/* =============================================
+   HIRU TV INVENTORY SYSTEM - WHITE & GOLD THEME
+   ============================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap');
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Core Palette (White & Gold) */
+  --clr-bg-base: #f9fafb;
+  --clr-bg-surface: #ffffff;
+  --clr-bg-elevated: #ffffff;
+  --clr-bg-hover: #f3f4f6;
+  --clr-border: rgba(0, 0, 0, 0.08);
+  --clr-border-active: #d4af37;
+
+  /* Brand Accents (Hiru Orange & Gold) */
+  --clr-accent: #ff9f00; /* Hiru Orange */
+  --clr-accent-dim: rgba(255, 159, 0, 0.1);
+  --clr-accent-hover: #e68f00;
+  
+  --clr-gold: #d4af37; /* Metallic Gold */
+  --clr-gold-dim: rgba(212, 175, 55, 0.12);
+  --clr-gold-hover: #c19b2e;
+
+  /* Status Colors */
+  --clr-success: #10b981;
+  --clr-success-dim: rgba(16, 185, 129, 0.1);
+  --clr-warning: #f59e0b;
+  --clr-warning-dim: rgba(245, 158, 11, 0.1);
+  --clr-danger: #ef4444;
+  --clr-danger-dim: rgba(239, 68, 68, 0.1);
+
+  /* Text */
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --text-muted: #9ca3af;
+  --text-inverse: #ffffff;
+
+  /* Sidebar */
+  --sidebar-width: 260px;
+  --sidebar-collapsed-width: 72px;
+  --header-height: 64px;
+
+  /* Typography */
+  --font-sans: 'Outfit', 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Radii */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  /* Shadows (Depth-based for light theme) */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.08);
+  --shadow-accent: 0 8px 24px rgba(255, 159, 0, 0.2);
+
+  /* Transitions */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ---- CSS Reset ---- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
 }
 
 html {
   height: 100%;
-}
-
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
 }
 
 body {
   min-height: 100%;
   display: flex;
   flex-direction: column;
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  font-family: var(--font-sans);
+  background: var(--clr-bg-base);
+  color: var(--text-primary);
+  overflow-x: hidden;
+  line-height: 1.5;
 }
 
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
+a { color: inherit; text-decoration: none; }
+button { font-family: var(--font-sans); cursor: pointer; border: none; outline: none; }
+input, textarea, select { font-family: var(--font-sans); outline: none; }
+
+/* ---- Scrollbar ---- */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: #e5e7eb;
+  border-radius: var(--radius-full);
+}
+::-webkit-scrollbar-thumb:hover { background: #d1d5db; }
+
+/* ---- Utility Classes ---- */
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.gap-1 { gap: 0.25rem; }
+.gap-2 { gap: 0.5rem; }
+.gap-3 { gap: 0.75rem; }
+.gap-4 { gap: 1rem; }
+.w-full { width: 100%; }
+.h-full { height: 100%; }
+.truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.font-mono { font-family: var(--font-mono); }
+
+/* ---- Glass & Card Styles ---- */
+.glass-card {
+  background: var(--clr-bg-surface);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+/* ---- Status Badges ---- */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
+.badge-active { background: #ecfdf5; color: #10b981; border: 1px solid #d1fae5; }
+.badge-failed { background: #fef2f2; color: #ef4444; border: 1px solid #fee2e2; }
+.badge-replaced { background: #eff6ff; color: #3b82f6; border: 1px solid #dbeafe; }
+.badge-warning { background: #fffbeb; color: #f59e0b; border: 1px solid #fef3c7; }
+
+/* ---- Buttons ---- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.65rem 1.25rem;
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: all var(--transition-normal);
+  white-space: nowrap;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--clr-accent), #f9b42d);
+  color: white;
+  box-shadow: var(--shadow-accent);
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(255, 159, 0, 0.3);
+}
+
+.btn-ghost {
+  background: white;
+  color: var(--text-secondary);
+  border: 1px solid var(--clr-border);
+}
+.btn-ghost:hover {
+  background: var(--clr-bg-hover);
+  border-color: var(--clr-gold);
+  color: var(--clr-gold);
+}
+
+.btn-sm { padding: 0.4rem 0.85rem; font-size: 0.8rem; }
+
+/* ---- Form Inputs ---- */
+.form-group { display: flex; flex-direction: column; gap: 0.5rem; }
+.form-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.form-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 0.925rem;
+  transition: all var(--transition-fast);
+}
+.form-input:focus {
+  border-color: var(--clr-gold);
+  box-shadow: 0 0 0 4px var(--clr-gold-dim);
+}
+
+/* ---- Table Styles ---- */
+.table-container {
+  background: white;
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+.data-table { width: 100%; border-collapse: collapse; }
+.data-table thead tr { background: #f9fafb; border-bottom: 2px solid #f3f4f6; }
+.data-table th {
+  padding: 1rem;
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.data-table td { padding: 1.15rem 1rem; border-bottom: 1px solid #f3f4f6; }
+.data-table tbody tr:hover { background: #fdfdfd; }
+
+/* ---- Stat Cards ---- */
+.stat-card {
+  background: white;
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-md);
+  transition: transform var(--transition-normal);
+}
+.stat-card:hover { transform: translateY(-4px); border-color: var(--clr-gold); }
+.stat-card-label { font-size: 0.85rem; font-weight: 600; color: #6b7280; margin-bottom: 0.5rem; }
+.stat-card-value { font-size: 2.25rem; font-weight: 800; color: var(--text-primary); }
+
+/* ---- Header & Breadcrumbs ---- */
+.page-header { margin-bottom: 2rem; }
+.page-title { font-size: 1.75rem; font-weight: 800; color: var(--text-primary); letter-spacing: -0.02em; }
+.page-subtitle { margin-top: 0.25rem; font-size: 1rem; color: var(--text-secondary); }
+
+/* ---- Animations ---- */
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.animate-fade-in { animation: fadeIn 0.4s ease forwards; }
+
+/* ---- Hiru Brand Element ---- */
+.gold-gradient-text {
+  background: linear-gradient(to right, var(--clr-accent), var(--clr-gold));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }

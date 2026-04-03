@@ -1,0 +1,32 @@
+.detailsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.infoList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.infoItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--clr-border);
+}
+
+.label {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.nicItem {
+  padding: 0.75rem;
+  background: var(--clr-bg-base);
+  border-radius: var(--radius-md);
+  border-left: 3px solid var(--clr-gold);
+}

@@ -1,0 +1,34 @@
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 2rem;
+  align-items: start;
+}
+
+.listSection {
+  flex: 1;
+}
+
+.formPanel {
+  position: sticky;
+  top: 1.5rem;
+}
+
+.deleteBtn {
+  background: #fef2f2;
+  color: #ef4444;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-md);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+.deleteBtn:hover { background: #ef4444; color: white; transform: scale(1.1); }
+
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; }
+  .formPanel { position: static; }
+}

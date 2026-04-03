@@ -1,0 +1,95 @@
+/* =============================================
+   ACTIVITY LOGS STYLES
+   ============================================= */
+
+.logsContainer {
+  background: var(--clr-bg-surface);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.tableHeader {
+  display: grid;
+  grid-template-columns: 200px 200px 200px 1fr;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  background: var(--clr-bg-elevated);
+  border-bottom: 1px solid var(--clr-border);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.tableRow {
+  display: grid;
+  grid-template-columns: 200px 200px 200px 1fr;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--clr-border);
+  align-items: center;
+  transition: background var(--transition-fast);
+  color: var(--text-primary);
+  font-size: 0.85rem;
+}
+
+.tableRow:hover {
+  background: var(--clr-bg-hover);
+}
+
+.tableRow:last-child {
+  border-bottom: none;
+}
+
+.timestamp {
+  font-family: var(--font-mono);
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+}
+
+.userBlock {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--clr-accent-dim);
+  color: var(--clr-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  font-weight: 700;
+}
+
+.actionBadge {
+  display: inline-flex;
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-sm);
+  background: var(--clr-bg-elevated);
+  border: 1px solid var(--clr-border);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.action_ADD { color: var(--clr-success); border-color: rgba(34, 212, 143, 0.3); }
+.action_EDIT { color: var(--clr-info); border-color: rgba(56, 189, 248, 0.3); }
+.action_STATUS { color: var(--clr-warning); border-color: rgba(245, 158, 11, 0.3); }
+.action_DELETE { color: var(--clr-danger); border-color: rgba(244, 63, 94, 0.3); }
+
+.details {
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.details highlight {
+  color: var(--text-primary);
+  font-weight: 500;
+}
